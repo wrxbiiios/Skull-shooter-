@@ -419,7 +419,8 @@ class Player {
 
     update(keys) {
         // Movement - support both keyboard and touch controls
-        const touchKeys = game.touchKeys || {};
+        const game = window.game;
+        const touchKeys = game ? game.touchKeys : {};
         
         if (keys['w'] || keys['arrowup'] || touchKeys['up']) {
             this.y = Math.max(this.size / 2, this.y - this.speed);
@@ -597,7 +598,6 @@ class Particle {
 }
 
 // Start the game when page loads
-let game;
 window.addEventListener('load', () => {
-    game = new Game();
+    window.game = new Game();
 });
