@@ -3,17 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skull Shooter</title>
+    <title>Skull Shooter - Cyberpunk Edition</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; background-color: #f0f0f0; }
-        h1 { color: #333; }
-        #game-container { margin: 50px auto; width: 80%; max-width: 600px; border: 1px solid #ccc; padding: 20px; background: #fff; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 50%, #0a0a1a 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #00ffff;
+            overflow: hidden;
+        }
+        
+        #game-container {
+            text-align: center;
+            padding: 20px;
+            max-width: 100%;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            color: #ff00ff;
+            text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff;
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+        }
+        
+        #gameCanvas {
+            border: 3px solid #00ffff;
+            box-shadow: 0 0 20px #00ffff, inset 0 0 20px rgba(0, 255, 255, 0.1);
+            background: #0a0a1a;
+            display: block;
+            margin: 20px auto;
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .controls {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #00ffff;
+            text-shadow: 0 0 5px #00ffff;
+        }
+        
+        .controls p {
+            margin: 5px 0;
+        }
+        
+        .key {
+            display: inline-block;
+            background: rgba(0, 255, 255, 0.2);
+            border: 1px solid #00ffff;
+            padding: 2px 8px;
+            margin: 0 2px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 650px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            #gameCanvas {
+                width: 100%;
+                height: auto;
+            }
+            
+            .controls {
+                font-size: 0.8em;
+            }
+        }
     </style>
 </head>
 <body>
     <div id="game-container">
-        <h1>Welcome to Skull Shooter</h1>
-        <p>This is a simple placeholder for the game.</p>
+        <h1>⚡ SKULL SHOOTER ⚡</h1>
+        <canvas id="gameCanvas" width="600" height="800"></canvas>
+        <div class="controls">
+            <p><strong>CONTROLS:</strong></p>
+            <p>Move: <span class="key">WASD</span> or <span class="key">Arrow Keys</span></p>
+            <p>Shoot: <span class="key">SPACE</span></p>
+            <p>Restart: <span class="key">R</span> (when game over)</p>
+        </div>
     </div>
+    
+    <!-- Load game scripts in order -->
+    <script src="js/particle.js"></script>
+    <script src="js/bullet.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/enemy.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
