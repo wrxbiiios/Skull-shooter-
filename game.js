@@ -34,7 +34,14 @@ const CONFIG = {
 class Game {
     constructor() {
         this.canvas = document.getElementById('gameCanvas');
+        if (!this.canvas) {
+            throw new Error('Canvas element with id "gameCanvas" not found');
+        }
+        
         this.ctx = this.canvas.getContext('2d');
+        if (!this.ctx) {
+            throw new Error('Failed to get 2D context from canvas');
+        }
         
         // Instance properties for canvas dimensions
         this.canvasWidth = CONFIG.canvas.width;
@@ -618,5 +625,14 @@ class Particle {
 
 // Start the game when page loads
 window.addEventListener('load', () => {
-    new Game();
+    const canvas = document.getElementById('gameCanvas');
+    if (!canvas) {
+        console.error('Canvas element not found!');
+        return;
+    }
+    try {
+        new Game();
+    } catch (error) {
+        console.error('Failed to initialize game:', error);
+    }
 });
