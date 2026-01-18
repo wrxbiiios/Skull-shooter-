@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#1a0033">
+    <title>Cyberpunk Skull Shooter</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <h1>🔮 CYBERPUNK SKULL SHOOTER 🔮</h1>
+        </div>
+        
+        <div class="game-info">
+            <div class="info-item">
+                <span class="label">LEVEL:</span>
+                <span id="level" class="value">1</span>
+            </div>
+            <div class="info-item">
+                <span class="label">SCORE:</span>
+                <span id="score" class="value">0</span>
+            </div>
+            <div class="info-item">
+                <span class="label">HEALTH:</span>
+                <span id="health" class="value">100</span>
+            </div>
+            <div class="info-item">
+                <span class="label">ENEMIES:</span>
+                <span id="enemiesKilled" class="value">0</span>
+            </div>
+        </div>
+
+        <canvas id="gameCanvas"></canvas>
+        
+        <div class="controls">
+            <p>🎮 WASD/Arrow Keys: Move | Space: Shoot</p>
+            <p class="touch-hint">📱 Touch controls: Tap canvas edges to move, tap center to shoot</p>
+        </div>
+        
+        <!-- Mobile/Touch Controls -->
+        <div id="touchControls" class="touch-controls">
+            <div class="control-pad">
+                <button class="touch-btn" data-direction="up">▲</button>
+                <div class="horizontal-controls">
+                    <button class="touch-btn" data-direction="left">◄</button>
+                    <button class="touch-btn shoot-btn" data-action="shoot">🔫</button>
+                    <button class="touch-btn" data-direction="right">►</button>
+                </div>
+                <button class="touch-btn" data-direction="down">▼</button>
+            </div>
+        </div>
+
+        <div id="levelComplete" class="modal hidden">
+            <div class="modal-content">
+                <h2>🎉 LEVEL COMPLETE! 🎉</h2>
+                <p>You've earned a <span class="nft-text">Cyberpunk Skull NFT</span>!</p>
+                <p id="levelStats"></p>
+                <button id="nextLevel" class="game-button">NEXT LEVEL</button>
+            </div>
+        </div>
+
+        <div id="gameOver" class="modal hidden">
+            <div class="modal-content">
+                <h2>💀 GAME OVER 💀</h2>
+                <p id="finalStats"></p>
+                <button id="restart" class="game-button">RESTART</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
