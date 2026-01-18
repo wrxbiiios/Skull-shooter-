@@ -1,12 +1,15 @@
 // Enemy class
 class Enemy {
+    static BASE_SPEED = 80;
+    static SPEED_VARIANCE = 40;
+    
     constructor(x, y, game) {
         this.x = x;
         this.y = y;
         this.game = game;
         this.width = 30;
         this.height = 30;
-        this.speed = 80 + Math.random() * 40; // pixels per second
+        this.speed = Enemy.BASE_SPEED + Math.random() * Enemy.SPEED_VARIANCE; // pixels per second
         this.destroyed = false;
         this.rotationSpeed = Math.random() * 2 - 1; // Random rotation
         this.rotation = 0;

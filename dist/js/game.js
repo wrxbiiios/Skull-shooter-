@@ -18,7 +18,7 @@ class Game {
         
         // Spawn settings
         this.enemySpawnRate = 2000; // ms
-        this.lastEnemySpawn = 0;
+        this.lastEnemySpawn = performance.now();
         this.enemiesPerLevel = 10;
         this.enemiesKilled = 0;
         
@@ -108,17 +108,19 @@ class Game {
     checkCollisions() {
         // Bullets vs Enemies
         this.bullets.forEach(bullet => {
-            this.enemies.forEach(enemy => {
-                if (!enemy.destroyed && this.checkCollision(bullet, enemy)) {
-                    enemy.hit();
-                    bullet.destroyed = true;
-                    this.score += 10;
-                    this.enemiesKilled++;
-                    
-                    // Create explosion particles
-                    this.createExplosion(enemy.x, enemy.y, '#ff00ff');
-                }
-            });
+            if (!bullet.destroyed) {
+                this.enemies.forEach(enemy => {
+                    if (!enemy.destroyed && this.checkCollision(bullet, enemy)) {
+                        enemy.hit();
+                        bullet.destroyed = true;
+                        this.score += 10;
+                        this.enemiesKilled++;
+                        
+                        // Create explosion particles
+                        this.createExplosion(enemy.x, enemy.y, '#ff00ff');
+                    }
+                });
+            }
         });
         
         this.bullets = this.bullets.filter(bullet => !bullet.destroyed);

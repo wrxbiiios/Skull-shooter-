@@ -1,5 +1,7 @@
 // Player class
 class Player {
+    static DAMAGE_PER_HIT = 20;
+    
     constructor(x, y, game) {
         this.x = x;
         this.y = y;
@@ -56,7 +58,7 @@ class Player {
     }
     
     hit() {
-        this.health -= 20;
+        this.health -= Player.DAMAGE_PER_HIT;
         if (this.health < 0) this.health = 0;
     }
     
