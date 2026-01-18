@@ -36,6 +36,10 @@ class Game {
         this.canvas = document.getElementById('gameCanvas');
         this.ctx = this.canvas.getContext('2d');
         
+        // Instance properties for canvas dimensions
+        this.canvasWidth = CONFIG.canvas.width;
+        this.canvasHeight = CONFIG.canvas.height;
+        
         // Make canvas responsive for mobile/Telegram
         this.setupCanvas();
         
@@ -56,6 +60,11 @@ class Game {
         this.lastShot = 0;
         this.enemySpawnTimer = null;
         
+        // Store resize handler for cleanup
+        this.resizeHandler = () => {
+            this.resizeCanvas();
+        };
+        
         this.init();
     }
     
@@ -64,9 +73,7 @@ class Game {
         this.resizeCanvas();
         
         // Handle window resize for Telegram
-        window.addEventListener('resize', () => {
-            this.resizeCanvas();
-        });
+        window.addEventListener('resize', this.resizeHandler);
     }
     
     resizeCanvas() {
@@ -76,18 +83,18 @@ class Game {
             const maxHeight = Math.min(window.innerHeight * 0.5, 450);
             this.canvas.width = maxWidth;
             this.canvas.height = maxHeight;
-            CONFIG.canvas.width = maxWidth;
-            CONFIG.canvas.height = maxHeight;
+            this.canvasWidth = maxWidth;
+            this.canvasHeight = maxHeight;
         } else {
-            this.canvas.width = CONFIG.canvas.width;
-            this.canvas.height = CONFIG.canvas.height;
+            this.canvas.width = this.canvasWidth;
+            this.canvas.height = this.canvasHeight;
         }
     }
 
     init() {
         this.player = new Player(
-            CONFIG.canvas.width / 2,
-            CONFIG.canvas.height / 2,
+            this.canvasWidth / 2,
+            this.canvasHeight / 2,
             this
         );
         
@@ -178,20 +185,20 @@ class Game {
         
         switch(side) {
             case 0: // Top
-                x = Math.random() * CONFIG.canvas.width;
+                x = Math.random() * this.canvasWidth;
                 y = -CONFIG.enemy.size;
                 break;
             case 1: // Right
-                x = CONFIG.canvas.width + CONFIG.enemy.size;
-                y = Math.random() * CONFIG.canvas.height;
+                x = this.canvasWidth + CONFIG.enemy.size;
+                y = Math.random() * this.canvasHeight;
                 break;
             case 2: // Bottom
-                x = Math.random() * CONFIG.canvas.width;
-                y = CONFIG.canvas.height + CONFIG.enemy.size;
+                x = Math.random() * this.canvasWidth;
+                y = this.canvasHeight + CONFIG.enemy.size;
                 break;
             case 3: // Left
                 x = -CONFIG.enemy.size;
-                y = Math.random() * CONFIG.canvas.height;
+                y = Math.random() * this.canvasHeight;
                 break;
         }
         
@@ -217,7 +224,8 @@ class Game {
                 this.player.x,
                 this.player.y,
                 dir.dx,
-                dir.dy
+                dir.dy,
+                this
             ));
         });
     }
@@ -298,7 +306,7 @@ class Game {
     draw() {
         // Clear canvas
         this.ctx.fillStyle = '#0a0014';
-        this.ctx.fillRect(0, 0, CONFIG.canvas.width, CONFIG.canvas.height);
+        this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
         // Draw grid effect
         this.drawGrid();
@@ -321,17 +329,17 @@ class Game {
         this.ctx.lineWidth = 1;
         
         const gridSize = 50;
-        for (let x = 0; x < CONFIG.canvas.width; x += gridSize) {
+        for (let x = 0; x < this.canvasWidth; x += gridSize) {
             this.ctx.beginPath();
             this.ctx.moveTo(x, 0);
-            this.ctx.lineTo(x, CONFIG.canvas.height);
+            this.ctx.lineTo(x, this.canvasHeight);
             this.ctx.stroke();
         }
         
-        for (let y = 0; y < CONFIG.canvas.height; y += gridSize) {
+        for (let y = 0; y < this.canvasHeight; y += gridSize) {
             this.ctx.beginPath();
             this.ctx.moveTo(0, y);
-            this.ctx.lineTo(CONFIG.canvas.width, y);
+            this.ctx.lineTo(this.canvasWidth, y);
             this.ctx.stroke();
         }
     }
@@ -394,8 +402,8 @@ class Game {
         this.isPaused = false;
         
         this.player = new Player(
-            CONFIG.canvas.width / 2,
-            CONFIG.canvas.height / 2,
+            this.canvasWidth / 2,
+            this.canvasHeight / 2,
             this
         );
         
@@ -406,6 +414,14 @@ class Game {
         this.update();
         this.draw();
         requestAnimationFrame(() => this.gameLoop());
+    }
+    
+    destroy() {
+        // Cleanup: remove event listener to prevent memory leaks
+        window.removeEventListener('resize', this.resizeHandler);
+        if (this.enemySpawnTimer) {
+            clearInterval(this.enemySpawnTimer);
+        }
     }
 }
 
@@ -428,13 +444,13 @@ class Player {
             this.y = Math.max(this.size / 2, this.y - this.speed);
         }
         if (keys['s'] || keys['arrowdown'] || touchKeys['down']) {
-            this.y = Math.min(CONFIG.canvas.height - this.size / 2, this.y + this.speed);
+            this.y = Math.min(this.game.canvasHeight - this.size / 2, this.y + this.speed);
         }
         if (keys['a'] || keys['arrowleft'] || touchKeys['left']) {
             this.x = Math.max(this.size / 2, this.x - this.speed);
         }
         if (keys['d'] || keys['arrowright'] || touchKeys['right']) {
-            this.x = Math.min(CONFIG.canvas.width - this.size / 2, this.x + this.speed);
+            this.x = Math.min(this.game.canvasWidth - this.size / 2, this.x + this.speed);
         }
     }
 
@@ -528,13 +544,14 @@ class Enemy {
 
 // Bullet class
 class Bullet {
-    constructor(x, y, dx, dy) {
+    constructor(x, y, dx, dy, game) {
         this.x = x;
         this.y = y;
         this.size = CONFIG.bullet.size;
         this.dx = dx * CONFIG.bullet.speed;
         this.dy = dy * CONFIG.bullet.speed;
         this.alive = true;
+        this.game = game;
     }
 
     update() {
@@ -545,9 +562,9 @@ class Bullet {
     isAlive() {
         return this.alive && 
                this.x > 0 && 
-               this.x < CONFIG.canvas.width && 
+               this.x < this.game.canvasWidth && 
                this.y > 0 && 
-               this.y < CONFIG.canvas.height;
+               this.y < this.game.canvasHeight;
     }
 
     draw(ctx) {
@@ -601,5 +618,5 @@ class Particle {
 
 // Start the game when page loads
 window.addEventListener('load', () => {
-    window.game = new Game();
+    new Game();
 });
