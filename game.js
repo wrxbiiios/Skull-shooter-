@@ -438,7 +438,7 @@ class Player {
 
     update(keys) {
         // Movement - support both keyboard and touch controls
-        const touchKeys = this.game ? this.game.touchKeys : {};
+        const touchKeys = this.game.touchKeys;
         
         if (keys['w'] || keys['arrowup'] || touchKeys['up']) {
             this.y = Math.max(this.size / 2, this.y - this.speed);
