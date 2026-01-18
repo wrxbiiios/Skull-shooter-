@@ -24,6 +24,9 @@ const CONFIG = {
     level: {
         enemiesPerLevel: 10,
         completionBonus: 100
+    },
+    mobile: {
+        breakpoint: 768
     }
 };
 
@@ -58,7 +61,16 @@ class Game {
     
     setupCanvas() {
         // Responsive canvas sizing for Telegram
-        const isMobile = window.innerWidth <= 768;
+        this.resizeCanvas();
+        
+        // Handle window resize for Telegram
+        window.addEventListener('resize', () => {
+            this.resizeCanvas();
+        });
+    }
+    
+    resizeCanvas() {
+        const isMobile = window.innerWidth <= CONFIG.mobile.breakpoint;
         if (isMobile) {
             const maxWidth = Math.min(window.innerWidth - 40, 600);
             const maxHeight = Math.min(window.innerHeight * 0.5, 450);
@@ -70,24 +82,13 @@ class Game {
             this.canvas.width = CONFIG.canvas.width;
             this.canvas.height = CONFIG.canvas.height;
         }
-        
-        // Handle window resize for Telegram
-        window.addEventListener('resize', () => {
-            if (window.innerWidth <= 768) {
-                const maxWidth = Math.min(window.innerWidth - 40, 600);
-                const maxHeight = Math.min(window.innerHeight * 0.5, 450);
-                this.canvas.width = maxWidth;
-                this.canvas.height = maxHeight;
-                CONFIG.canvas.width = maxWidth;
-                CONFIG.canvas.height = maxHeight;
-            }
-        });
     }
 
     init() {
         this.player = new Player(
             CONFIG.canvas.width / 2,
-            CONFIG.canvas.height / 2
+            CONFIG.canvas.height / 2,
+            this
         );
         
         this.setupEventListeners();
@@ -394,7 +395,8 @@ class Game {
         
         this.player = new Player(
             CONFIG.canvas.width / 2,
-            CONFIG.canvas.height / 2
+            CONFIG.canvas.height / 2,
+            this
         );
         
         this.startEnemySpawning();
@@ -409,18 +411,18 @@ class Game {
 
 // Player class
 class Player {
-    constructor(x, y) {
+    constructor(x, y, game) {
         this.x = x;
         this.y = y;
         this.size = CONFIG.player.size;
         this.speed = CONFIG.player.speed;
         this.health = CONFIG.player.maxHealth;
+        this.game = game;
     }
 
     update(keys) {
         // Movement - support both keyboard and touch controls
-        const game = window.game;
-        const touchKeys = game ? game.touchKeys : {};
+        const touchKeys = this.game ? this.game.touchKeys : {};
         
         if (keys['w'] || keys['arrowup'] || touchKeys['up']) {
             this.y = Math.max(this.size / 2, this.y - this.speed);
