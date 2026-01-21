@@ -1,5 +1,14 @@
 // Skull Shooter Game
 class SkullShooter {
+    // Game configuration constants
+    static SKULL_SIZE = 40;
+    static SKULL_MIN_SPEED = 0.5;
+    static SKULL_MAX_SPEED = 2.0;
+    static SPAWN_INTERVAL = 1000; // milliseconds
+    static POINTS_PER_SKULL = 10;
+    static CANVAS_WIDTH = 600;
+    static CANVAS_HEIGHT = 400;
+    
     constructor() {
         this.canvas = document.getElementById('game-canvas');
         this.ctx = this.canvas.getContext('2d');
@@ -7,15 +16,15 @@ class SkullShooter {
         this.gameRunning = false;
         this.skulls = [];
         this.lastSpawnTime = 0;
-        this.spawnInterval = 1000; // 1 second
+        this.spawnInterval = SkullShooter.SPAWN_INTERVAL;
         
         this.setupCanvas();
         this.setupEventListeners();
     }
     
     setupCanvas() {
-        this.canvas.width = 600;
-        this.canvas.height = 400;
+        this.canvas.width = SkullShooter.CANVAS_WIDTH;
+        this.canvas.height = SkullShooter.CANVAS_HEIGHT;
     }
     
     setupEventListeners() {
@@ -41,10 +50,10 @@ class SkullShooter {
     
     spawnSkull() {
         const skull = {
-            x: Math.random() * (this.canvas.width - 40),
-            y: Math.random() * (this.canvas.height - 40),
-            size: 40,
-            speed: 0.5 + Math.random() * 1.5,
+            x: Math.random() * (this.canvas.width - SkullShooter.SKULL_SIZE),
+            y: Math.random() * (this.canvas.height - SkullShooter.SKULL_SIZE),
+            size: SkullShooter.SKULL_SIZE,
+            speed: SkullShooter.SKULL_MIN_SPEED + Math.random() * (SkullShooter.SKULL_MAX_SPEED - SkullShooter.SKULL_MIN_SPEED),
             direction: Math.random() * Math.PI * 2
         };
         this.skulls.push(skull);
@@ -102,7 +111,7 @@ class SkullShooter {
             
             if (distance < skull.size / 2) {
                 this.skulls.splice(i, 1);
-                this.score += 10;
+                this.score += SkullShooter.POINTS_PER_SKULL;
                 this.updateScore();
                 break;
             }
