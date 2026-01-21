@@ -3,17 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skull Shooter</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; background-color: #f0f0f0; }
-        h1 { color: #333; }
-        #game-container { margin: 50px auto; width: 80%; max-width: 600px; border: 1px solid #ccc; padding: 20px; background: #fff; }
-    </style>
+    <meta name="description" content="Skull Shooter - A fun browser-based shooting game where you click to shoot moving skulls and score points!">
+    <meta name="keywords" content="game, shooter, skull, browser game, javascript game">
+    <meta name="author" content="Skull Shooter Team">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Skull Shooter Game">
+    <meta property="og:description" content="A fun browser-based shooting game where you click to shoot moving skulls!">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Skull Shooter Game">
+    <meta name="twitter:description" content="A fun browser-based shooting game where you click to shoot moving skulls!">
+    
+    <title>Skull Shooter - Browser Game</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="game-container">
-        <h1>Welcome to Skull Shooter</h1>
-        <p>This is a simple placeholder for the game.</p>
+        <h1>Skull Shooter</h1>
+        <p>Click on the skulls to shoot them and score points!</p>
+        
+        <div class="score">Score: <span id="score">0</span></div>
+        
+        <canvas id="game-canvas"></canvas>
+        
+        <div class="controls">
+            <button id="start-btn">Start Game</button>
+            <button id="reset-btn">Reset</button>
+        </div>
+        
+        <div style="margin-top: 20px; font-size: 14px; color: #666;">
+            <p><strong>How to play:</strong> Click the Start button, then click on the moving red skulls to shoot them!</p>
+        </div>
     </div>
+    
+    <script src="game.js"></script>
 </body>
 </html>
